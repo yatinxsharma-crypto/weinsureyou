@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>A Special Surprise For You 🎁</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1a0a2e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Nunito', sans-serif;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    /* Stars background */
+    .stars {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      border-radius: 50%;
+      background: #fff;
+      animation: twinkle var(--d) ease-in-out infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0.1; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.4); }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: linear-gradient(145deg, #2d1b4e, #1f0f3a);
+      border: 1.5px solid rgba(255,100,150,0.3);
+      border-radius: 24px;
+      padding: 52px 48px 44px;
+      max-width: 500px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(180,50,255,0.2), 0 32px 80px rgba(0,0,0,0.6);
+      animation: cardIn 0.7s cubic-bezier(0.16,1,0.3,1) both;
+    }
+
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(40px) scale(0.94); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .gift-emoji {
+      font-size: 64px;
+      display: block;
+      margin-bottom: 16px;
+      animation: bounce 2s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50% { transform: translateY(-10px) rotate(3deg); }
+    }
+
+    h1 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 30px;
+      color: #ffcce0;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .teaser {
+      font-size: 14px;
+      color: rgba(255,200,220,0.6);
+      margin-bottom: 36px;
+      font-style: italic;
+    }
+
+    /* THE BUTTON */
+    .click-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 40px;
+      background: linear-gradient(135deg, #ff4d8d, #c026d3);
+      color: #fff;
+      font-family: 'Fredoka One', cursive;
+      font-size: 20px;
+      letter-spacing: 1px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+      box-shadow: 0 0 30px rgba(255,77,141,0.5), 0 8px 24px rgba(0,0,0,0.4);
+      position: relative;
+      overflow: hidden;
+    }
+    .click-btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
+      border-radius: inherit;
+    }
+    .click-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 0 50px rgba(255,77,141,0.7), 0 12px 32px rgba(0,0,0,0.4);
+    }
+    .click-btn:active { transform: scale(0.97); }
+
+    /* SURPRISE PANEL */
+    .surprise {
+      display: none;
+      margin-top: 32px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,100,150,0.2);
+      border-radius: 16px;
+      padding: 24px 20px;
+      animation: popIn 0.5s cubic-bezier(0.16,1,0.3,1) both;
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.85); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .surprise h2 {
+      font-family: 'Fredoka One', cursive;
+      font-size: 22px;
+      color: #ff6eb0;
+      margin-bottom: 16px;
+    }
+
+    .wish-list {
+      list-style: none;
+      text-align: left;
+    }
+    .wish-list li {
+      font-size: 13.5px;
+      color: rgba(255,220,235,0.85);
+      padding: 9px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      line-height: 1.5;
+    }
+    .wish-list li:last-child { border-bottom: none; }
+    .wish-list li .icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+    .again-btn {
+      margin-top: 20px;
+      background: transparent;
+      border: 1.5px solid rgba(255,110,176,0.5);
+      color: #ff9ecf;
+      font-family: 'Nunito', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .again-btn:hover { background: rgba(255,110,176,0.15); color: #fff; }
+
+    /* Confetti particles */
+    .confetti-wrap {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 99;
+    }
+    .confetti-wrap span {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      top: -10px;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="stars" id="stars"></div>
+  <div class="confetti-wrap" id="confetti"></div>
+
+  <div class="card">
+    <span class="gift-emoji">🎁</span>
+    <h1>A Surprise Just For Pooja! 🌸</h1>
+    <p class="teaser">Hey Pooja, don't be afraid… or maybe be a little afraid 😈</p>
+
+    <button class="click-btn" id="mainBtn" onclick="reveal()">
+      🎉 Click Here
+    </button>
+
+    <div class="surprise" id="surpriseBox">
+      <h2>😈 Bad Wishes for Pooja!</h2>
+      <ul class="wish-list" id="wishList"></ul>
+      <button class="again-btn" onclick="shuffle()">🔀 Shuffle Wishes</button>
+    </div>
+  </div>
+
+  <script>
+    const allWishes = [
+      { icon: "📶", text: "May your WiFi always disconnect right before you hit Submit!" },
+      { icon: "🔋", text: "May your phone die at exactly 1% with no charger nearby!" },
+      { icon: "⏰", text: "May your alarm ring 5 minutes after you're already late!" },
+      { icon: "🧱", text: "May you always step on a Lego in the dark!" },
+      { icon: "🎧", text: "May your earphones always tangle no matter how carefully you store them!" },
+      { icon: "🖊️", text: "May every pen you pick up be out of ink!" },
+      { icon: "😬", text: "May autocorrect embarrass you at the worst possible moment!" },
+      { icon: "📺", text: "May your favorite show always buffer at the best part!" },
+      { icon: "🧦", text: "May you always lose one sock from every pair in the laundry!" },
+      { icon: "🍕", text: "May the last slice of pizza always be taken before you reach it!" },
+      { icon: "💤", text: "May you always wake up 2 minutes before your alarm!" },
+      { icon: "🚗", text: "May you always find a parking spot right after you leave!" },
+    ];
+
+    // Generate stars
+    const starsEl = document.getElementById('stars');
+    for (let i = 0; i < 80; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2.5 + 1;
+      s.style.cssText = `width:${size}px;height:${size}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*3+1.5).toFixed(1)}s;animation-delay:${(Math.random()*4).toFixed(1)}s`;
+      starsEl.appendChild(s);
+    }
+
+    function getRandomWishes(n) {
+      const shuffled = [...allWishes].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, n);
+    }
+
+    function renderWishes() {
+      const list = document.getElementById('wishList');
+      list.innerHTML = '';
+      getRandomWishes(6).forEach(w => {
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="icon">${w.icon}</span><span>${w.text}</span>`;
+        list.appendChild(li);
+      });
+    }
+
+    function launchConfetti() {
+      const colors = ['#ff4d8d','#c026d3','#facc15','#34d399','#60a5fa','#fb923c'];
+      const wrap = document.getElementById('confetti');
+      wrap.innerHTML = '';
+      for (let i = 0; i < 60; i++) {
+        const s = document.createElement('span');
+        s.style.cssText = `left:${Math.random()*100}%;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${(Math.random()*1.5+1).toFixed(2)}s;animation-delay:${(Math.random()*0.8).toFixed(2)}s;transform:rotate(${Math.random()*360}deg)`;
+        wrap.appendChild(s);
+      }
+      setTimeout(() => wrap.innerHTML = '', 3000);
+    }
+
+    function reveal() {
+      renderWishes();
+      document.getElementById('surpriseBox').style.display = 'block';
+      document.getElementById('mainBtn').textContent = '🎊 Surprised?';
+      launchConfetti();
+    }
+
+    function shuffle() {
+      renderWishes();
+      launchConfetti();
+    }
+  </script>
+</body>
+</html>
