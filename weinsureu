@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fill Details</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: Arial, sans-serif;
+}
+
+body{
+  background:#05051f;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+  overflow:hidden;
+  color:white;
+}
+
+.stars{
+  position:fixed;
+  width:100%;
+  height:100%;
+  top:0;
+  left:0;
+  background:
+    radial-gradient(white 1px, transparent 1px);
+  background-size:40px 40px;
+  opacity:0.35;
+}
+
+.container{
+  position:relative;
+  z-index:2;
+  text-align:center;
+}
+
+.btn{
+  background:linear-gradient(45deg,#19ff00,#0fb000);
+  color:white;
+  border:none;
+  padding:22px 70px;
+  font-size:34px;
+  font-weight:bold;
+  border-radius:25px;
+  cursor:pointer;
+  box-shadow:0 0 30px #19ff00;
+  transition:0.3s;
+}
+
+.btn:hover{
+  transform:scale(1.05);
+}
+
+.prank-box{
+  display:none;
+  margin-top:30px;
+  background:rgba(0,0,0,0.5);
+  border:2px solid #19ff00;
+  padding:35px;
+  border-radius:20px;
+  box-shadow:0 0 25px rgba(25,255,0,0.5);
+}
+
+.emoji{
+  font-size:120px;
+  margin-bottom:15px;
+}
+
+.text1{
+  font-size:52px;
+  color:#19ff00;
+  font-weight:bold;
+}
+
+.text2{
+  font-size:34px;
+  margin-top:10px;
+}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<div class="container">
+  <button class="btn" onclick="showPrank()">📝 Fill Details</button>
+
+  <div class="prank-box" id="prankBox">
+    <div class="emoji">😂🤣😂</div>
+    <div class="text1">Got You!</div>
+    <div class="text2">This is a prank 😂</div>
+  </div>
+</div>
+
+<script>
+function showPrank(){
+  document.getElementById("prankBox").style.display = "block";
+}
+</script>
+
+</body>
+</html>
