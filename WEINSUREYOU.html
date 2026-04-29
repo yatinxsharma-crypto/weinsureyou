@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Fill Details</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* ── FRONT PAGE ── */
+    #frontPage {
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+    #frontPage h1 {
+      font-size: 28px;
+      color: #fff;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+    #frontPage p {
+      font-size: 15px;
+      color: rgba(255,255,255,0.75);
+      margin-bottom: 36px;
+    }
+    .big-btn {
+      padding: 18px 60px;
+      font-size: 20px;
+      font-weight: 700;
+      background: #fff;
+      color: #667eea;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+      transition: transform 0.15s, box-shadow 0.15s;
+      letter-spacing: 0.5px;
+    }
+    .big-btn:hover {
+      transform: translateY(-3px) scale(1.04);
+      box-shadow: 0 16px 50px rgba(0,0,0,0.3);
+    }
+    .big-btn:active { transform: scale(0.97); }
+
+    /* ── JOKER PAGE ── */
+    #jokerPage {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+      animation: popIn 0.5s cubic-bezier(.36,1.5,.64,1);
+    }
+    @keyframes popIn {
+      from { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+      to   { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    .got-u {
+      font-size: 58px;
+      font-weight: 900;
+      color: #fff;
+      margin: 18px 0 6px;
+      text-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      animation: zoomIn 0.4s 0.3s both cubic-bezier(.36,1.5,.64,1);
+    }
+    .sub {
+      font-size: 22px;
+      color: rgba(255,255,255,0.9);
+      animation: fadeUp 0.4s 0.5s both;
+    }
+    .laugh {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FAC775;
+      margin-top: 12px;
+      letter-spacing: 5px;
+      animation: fadeUp 0.4s 0.7s both;
+    }
+    .again-btn {
+      margin-top: 28px;
+      padding: 12px 36px;
+      font-size: 15px;
+      font-weight: 700;
+      background: transparent;
+      border: 2.5px solid #fff;
+      color: #fff;
+      border-radius: 50px;
+      cursor: pointer;
+      animation: fadeUp 0.4s 0.9s both;
+      transition: background 0.2s, color 0.2s;
+    }
+    .again-btn:hover { background: #fff; color: #764ba2; }
+
+    @keyframes fadeIn  { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes zoomIn  { from { transform: scale(0.5); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+    @keyframes fadeUp  { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+    /* confetti */
+    .confetti-wrap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 99; }
+    .dot {
+      position: absolute;
+      animation: fall linear forwards;
+    }
+    @keyframes fall {
+      0%   { transform: translateY(-20px) rotate(0deg);   opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- FRONT: just one button -->
+  <div id="frontPage">
+    <h1>Hey There! 👋</h1>
+    <p>One quick step before you proceed</p>
+    <button class="big-btn" onclick="showJoker()">Fill Details</button>
+  </div>
+
+  <!-- JOKER REVEAL -->
+  <div id="jokerPage">
+    <svg width="180" height="180" viewBox="0 0 130 140" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="65,2 45,32 85,32" fill="#fff" opacity="0.9"/>
+      <rect x="36" y="30" width="58" height="10" rx="5" fill="#fff" opacity="0.7"/>
+      <circle cx="65" cy="10" r="5" fill="#FAC775"/>
+      <circle cx="65" cy="75" r="52" fill="#FAC775" stroke="#BA7517" stroke-width="2.5"/>
+      <ellipse cx="30" cy="82" rx="11" ry="8" fill="#E24B4A" opacity="0.55"/>
+      <ellipse cx="100" cy="82" rx="11" ry="8" fill="#E24B4A" opacity="0.55"/>
+      <ellipse cx="47" cy="62" rx="11" ry="13" fill="#fff"/>
+      <ellipse cx="83" cy="62" rx="11" ry="13" fill="#fff"/>
+      <circle cx="47" cy="64" r="6" fill="#185FA5"/>
+      <circle cx="83" cy="64" r="6" fill="#185FA5"/>
+      <circle cx="49" cy="62" r="2.5" fill="#fff"/>
+      <circle cx="85" cy="62" r="2.5" fill="#fff"/>
+      <circle cx="65" cy="78" r="5" fill="#E24B4A"/>
+      <path d="M37 95 Q65 130 93 95" stroke="#7B1F1F" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <path d="M39 95 Q65 124 91 95 Z" fill="#E24B4A"/>
+      <path d="M48 108 L55 112 L65 114 L75 112 L82 108" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M36 50 Q47 42 56 48" stroke="#7B5C00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <path d="M94 50 Q83 42 74 48" stroke="#7B5C00" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <circle cx="58" cy="133" r="6" fill="#F0D000" stroke="#BA7517" stroke-width="1.5"/>
+      <circle cx="72" cy="133" r="6" fill="#F0D000" stroke="#BA7517" stroke-width="1.5"/>
+    </svg>
+
+    <p class="got-u">GOT U! 🎉</p>
+    <p class="sub">It's a Prank, buddy! 😂</p>
+    <p class="laugh">HA HA HA HA HA!</p>
+    <button class="again-btn" onclick="reset()">Prank Someone Else ↺</button>
+  </div>
+
+  <div class="confetti-wrap" id="confetti"></div>
+
+  <script>
+    const colors = ['#fff','#FAC775','#E24B4A','#185FA5','#F0D000','#3B6D11','#D85A30'];
+
+    function launchConfetti() {
+      const wrap = document.getElementById('confetti');
+      wrap.innerHTML = '';
+      for (let i = 0; i < 100; i++) {
+        const d = document.createElement('div');
+        d.className = 'dot';
+        d.style.left = Math.random() * 100 + 'vw';
+        d.style.background = colors[Math.floor(Math.random() * colors.length)];
+        const s = (6 + Math.random() * 10) + 'px';
+        d.style.width = s; d.style.height = s;
+        d.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        d.style.animationDuration = (1.5 + Math.random() * 2.5) + 's';
+        d.style.animationDelay = (Math.random() * 0.8) + 's';
+        wrap.appendChild(d);
+      }
+      setTimeout(() => wrap.innerHTML = '', 5000);
+    }
+
+    function showJoker() {
+      document.getElementById('frontPage').style.display = 'none';
+      const j = document.getElementById('jokerPage');
+      j.style.display = 'flex';
+      launchConfetti();
+    }
+
+    function reset() {
+      document.getElementById('jokerPage').style.display = 'none';
+      document.getElementById('frontPage').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
