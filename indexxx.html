@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hello Deepak Bro</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{min-height:100vh;background:#05010f;display:flex;align-items:center;justify-content:center;font-family:"Nunito",sans-serif;overflow:hidden;}
+canvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;}
+#bgCanvas{z-index:0;}#particleCanvas{z-index:1;}#confettiCanvas{z-index:100;}
+.scene{position:relative;z-index:10;display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;padding:2rem;}
+.btn-outer{position:relative;display:inline-block;}
+.btn-glow-ring{position:absolute;inset:-8px;border-radius:60px;background:conic-gradient(from 0deg,#c084fc,#818cf8,#67e8f9,#c084fc);animation:spinRing 3s linear infinite;filter:blur(6px);opacity:0.8;}
+@keyframes spinRing{to{transform:rotate(360deg);}}
+.btn-inner{position:relative;padding:20px 60px;background:linear-gradient(135deg,#1e0533,#0f0a2e);border:1.5px solid rgba(192,132,252,0.5);border-radius:60px;cursor:pointer;font-family:"Cinzel Decorative",cursive;font-size:16px;font-weight:700;letter-spacing:2px;white-space:nowrap;transition:transform 0.2s;}
+.btn-inner:hover{transform:scale(1.05);}
+.btn-inner span{background:linear-gradient(135deg,#e879f9,#a78bfa,#67e8f9);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.card{display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;width:90%;max-width:460px;margin:0 auto;margin-top:2rem;animation:cardReveal 0.7s cubic-bezier(0.34,1.56,0.64,1) both;}
+@keyframes cardReveal{from{opacity:0;transform:translateY(60px) scale(0.7);}to{opacity:1;transform:translateY(0) scale(1);}}
+.card-bg{position:absolute;inset:0;border-radius:32px;background:linear-gradient(135deg,rgba(30,5,51,0.88),rgba(15,10,46,0.92));border:1px solid rgba(192,132,252,0.25);box-shadow:0 0 80px rgba(192,132,252,0.15),inset 0 1px 0 rgba(255,255,255,0.08);}
+@property --angle{syntax:"<angle>";initial-value:0deg;inherits:false;}
+.card-border{position:absolute;inset:-1.5px;border-radius:33px;background:conic-gradient(from var(--angle),transparent 70%,#c084fc,#818cf8,#67e8f9,transparent);animation:borderSpin 4s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;padding:1.5px;}
+@keyframes borderSpin{to{--angle:360deg;}}
+.card-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2.5rem 2rem 2rem;width:100%;}
+.prank-emoji{font-size:90px;animation:shake 0.4s ease-in-out infinite;margin-bottom:1rem;display:block;}
+@keyframes shake{0%,100%{transform:rotate(-12deg) scale(1);}50%{transform:rotate(12deg) scale(1.1);}}
+.greeting{font-family:"Cinzel Decorative",cursive;font-size:11px;letter-spacing:4px;color:rgba(192,132,252,0.7);text-transform:uppercase;margin-bottom:0.5rem;}
+.name{font-family:"Cinzel Decorative",cursive;font-size:22px;font-weight:700;background:linear-gradient(135deg,#e879f9 0%,#a78bfa 40%,#67e8f9 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:1.4;margin-bottom:1rem;animation:nameShimmer 3s ease-in-out infinite;}
+@keyframes nameShimmer{0%,100%{filter:drop-shadow(0 0 15px rgba(192,132,252,0.4));}50%{filter:drop-shadow(0 0 30px rgba(192,132,252,0.9));}}
+.divider{width:80%;height:1px;background:linear-gradient(90deg,transparent,rgba(192,132,252,0.5),rgba(103,232,249,0.5),transparent);margin-bottom:1.2rem;}
+.prank-text{font-size:32px;font-weight:800;color:#f472b6;margin-bottom:0.6rem;animation:pop 0.5s ease-in-out infinite alternate;letter-spacing:2px;}
+@keyframes pop{from{transform:scale(1);}to{transform:scale(1.12);}}
+.prank-sub{font-size:17px;color:rgba(210,195,235,0.9);margin-bottom:1.4rem;line-height:1.9;}
+.prank-sub b{color:#67e8f9;font-size:19px;}
+.laugh-row{display:flex;gap:8px;margin-bottom:1.4rem;font-size:28px;justify-content:center;animation:bounce 0.7s ease-in-out infinite;}
+@keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}}
+.close-btn{padding:10px 32px;background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.35);border-radius:40px;color:rgba(192,132,252,0.9);font-family:"Nunito",sans-serif;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all 0.25s;}
+.close-btn:hover{background:rgba(192,132,252,0.2);box-shadow:0 0 20px rgba(192,132,252,0.3);}
+.spark{position:fixed;pointer-events:none;z-index:50;animation:sparkFly 1.8s ease-out forwards;}
+@keyframes sparkFly{0%{opacity:1;transform:translateY(0) scale(1);}100%{opacity:0;transform:translateY(-120px) scale(0) rotate(180deg);}}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+<canvas id="particleCanvas"></canvas>
+<canvas id="confettiCanvas"></canvas>
+<div class="scene">
+  <div class="btn-outer" id="btnWrap">
+    <div class="btn-glow-ring"></div>
+    <button class="btn-inner" onclick="openCard()"><span>&#10024; Open Your Surprise &#10024;</span></button>
+  </div>
+  <div class="card" id="card">
+    <div class="card-border"></div>
+    <div class="card-bg"></div>
+    <div class="card-content">
+      <span class="prank-emoji">&#129315;</span>
+      <div class="greeting">A special message for</div>
+      <div class="name">Deepak Bro &#128521;</div>
+      <div class="divider"></div>
+      <div class="prank-text">IT'S A PRANK! &#128514;</div>
+      <p class="prank-sub">
+        Kya socha tha bhai? &#128514;<br>
+        <b>Caught you! &#127881;</b><br>
+        Bewakoof bana diya! &#129315;
+      </p>
+      <div class="laugh-row">&#128514; &#129315; &#128514; &#129315; &#128514; &#129315; &#128514;</div>
+      <button class="close-btn" onclick="closeCard()">&#10006; Close</button>
+    </div>
+  </div>
+</div>
+<script>
+(function(){
+  const c=document.getElementById("bgCanvas"),ctx=c.getContext("2d");
+  function resize(){c.width=innerWidth;c.height=innerHeight;draw();}
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const g=ctx.createRadialGradient(c.width*0.3,c.height*0.4,0,c.width*0.3,c.height*0.4,c.width*0.6);
+    g.addColorStop(0,"rgba(80,20,120,0.25)");g.addColorStop(1,"transparent");
+    ctx.fillStyle=g;ctx.fillRect(0,0,c.width,c.height);
+    const g2=ctx.createRadialGradient(c.width*0.7,c.height*0.6,0,c.width*0.7,c.height*0.6,c.width*0.5);
+    g2.addColorStop(0,"rgba(20,40,120,0.2)");g2.addColorStop(1,"transparent");
+    ctx.fillStyle=g2;ctx.fillRect(0,0,c.width,c.height);
+  }
+  resize();window.addEventListener("resize",resize);
+})();
+(function(){
+  const c=document.getElementById("particleCanvas"),ctx=c.getContext("2d");
+  function resize(){c.width=innerWidth;c.height=innerHeight;}
+  resize();window.addEventListener("resize",resize);
+  const cols=["rgba(192,132,252,","rgba(129,140,248,","rgba(103,232,249,","rgba(255,255,255,"];
+  const stars=Array.from({length:300},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.8+0.2,a:Math.random(),da:(Math.random()-0.5)*0.015,color:cols[Math.floor(Math.random()*4)]}));
+  const shooters=[];
+  setInterval(()=>{if(shooters.length<3)shooters.push({x:Math.random()*innerWidth,y:0,vx:(Math.random()-0.5)*8,vy:Math.random()*4+3,tail:[]});},4000);
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    stars.forEach(s=>{s.a=Math.max(0.05,Math.min(1,s.a+s.da));if(s.a<=0.05||s.a>=1)s.da*=-1;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fillStyle=s.color+s.a+")";ctx.fill();});
+    for(let i=shooters.length-1;i>=0;i--){
+      const s=shooters[i];s.tail.push({x:s.x,y:s.y});if(s.tail.length>20)s.tail.shift();
+      s.tail.forEach((p,j)=>{ctx.beginPath();ctx.arc(p.x,p.y,1,0,Math.PI*2);ctx.fillStyle="rgba(255,255,255,"+(j/s.tail.length*0.8)+")";ctx.fill();});
+      ctx.beginPath();ctx.arc(s.x,s.y,2,0,Math.PI*2);ctx.fillStyle="white";ctx.fill();
+      s.x+=s.vx;s.y+=s.vy;
+      if(s.y>innerHeight||s.x<0||s.x>innerWidth)shooters.splice(i,1);
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+document.addEventListener("mousemove",function(e){
+  if(Math.random()>0.35)return;
+  const icons=["&#128514;","&#129315;","&#128514;","&#129315;"];
+  const el=document.createElement("div");el.className="spark";
+  el.innerHTML=icons[Math.floor(Math.random()*icons.length)];
+  el.style.cssText="left:"+(e.clientX-10)+"px;top:"+(e.clientY-10)+"px;font-size:24px;";
+  document.body.appendChild(el);setTimeout(()=>el.remove(),1800);
+});
+function openCard(){
+  document.getElementById("btnWrap").style.display="none";
+  document.getElementById("card").style.display="flex";
+  confettiBurst();laughShower();
+}
+function closeCard(){
+  document.getElementById("card").style.display="none";
+  document.getElementById("btnWrap").style.display="inline-block";
+}
+function confettiBurst(){
+  const c=document.getElementById("confettiCanvas"),ctx=c.getContext("2d");
+  c.width=innerWidth;c.height=innerHeight;
+  const colors=["#c084fc","#818cf8","#67e8f9","#f472b6","#fbbf24","#34d399","#e879f9"];
+  const shapes=["circle","rect","triangle"];
+  const pieces=Array.from({length:250},()=>({x:Math.random()*c.width,y:-20,vx:(Math.random()-0.5)*6,vy:Math.random()*5+2,r:Math.random()*7+3,c:colors[Math.floor(Math.random()*colors.length)],a:Math.random()*Math.PI*2,va:(Math.random()-0.5)*0.3,shape:shapes[Math.floor(Math.random()*shapes.length)]}));
+  let frame=0;
+  function draw(){
+    ctx.clearRect(0,0,c.width,c.height);
+    const alpha=Math.max(0,1-frame/140);
+    pieces.forEach(p=>{
+      ctx.save();ctx.globalAlpha=alpha;ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.fillStyle=p.c;
+      if(p.shape==="circle"){ctx.beginPath();ctx.arc(0,0,p.r,0,Math.PI*2);ctx.fill();}
+      else if(p.shape==="rect"){ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.5);}
+      else{ctx.beginPath();ctx.moveTo(0,-p.r);ctx.lineTo(p.r,p.r);ctx.lineTo(-p.r,p.r);ctx.closePath();ctx.fill();}
+      ctx.restore();
+      p.x+=p.vx;p.y+=p.vy;p.a+=p.va;p.vy+=0.05;
+    });
+    frame++;
+    if(frame<200)requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,c.width,c.height);
+  }
+  draw();
+}
+function laughShower(){
+  const icons=["&#128514;","&#129315;","&#128514;","&#129315;","&#128514;","&#129315;"];
+  for(let i=0;i<60;i++){
+    setTimeout(()=>{
+      const el=document.createElement("div");el.className="spark";
+      el.innerHTML=icons[Math.floor(Math.random()*icons.length)];
+      el.style.cssText="left:"+Math.random()*innerWidth+"px;top:"+(innerHeight*0.1+Math.random()*innerHeight*0.8)+"px;font-size:"+(20+Math.random()*32)+"px;";
+      document.body.appendChild(el);setTimeout(()=>el.remove(),1800);
+    },i*50);
+  }
+}
+</script>
+</body>
+</html>
