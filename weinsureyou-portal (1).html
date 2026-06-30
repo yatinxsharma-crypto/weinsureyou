@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>We Insure You — Client Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f5f5f0;color:#1a1a1a;min-height:100vh}
+:root{--green:#0F6E56;--green-dark:#085041;--green-light:#E1F5EE;--amber:#EF9F27;--amber-dark:#BA7517;--amber-light:#FAEEDA;--red:#E24B4A;--border:#e5e5e0;--bg:#f5f5f0;--card:#ffffff;--text:#1a1a1a;--muted:#6b6b6b;--surface:#f0f0eb}
+.screen{display:none}.screen.active{display:block}
+
+/* LOGIN */
+.login-wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:2rem;background:var(--bg)}
+.login-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:2rem;width:100%;max-width:380px;box-shadow:0 4px 24px rgba(0,0,0,0.06)}
+.brand{display:flex;align-items:center;gap:10px;margin-bottom:1.5rem}
+.brand-dot{width:38px;height:38px;background:var(--green);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.brand-dot svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.brand-name{font-size:17px;font-weight:600;color:var(--text)}
+.brand-sub{font-size:11px;color:var(--muted)}
+.login-title{font-size:22px;font-weight:600;margin-bottom:4px}
+.login-sub{font-size:13px;color:var(--muted);margin-bottom:1.5rem}
+.field{margin-bottom:1rem}
+.field label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px;font-weight:500}
+.field input{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px;background:var(--card);color:var(--text);transition:border-color 0.2s}
+.field input:focus{outline:none;border-color:var(--green);box-shadow:0 0 0 3px rgba(15,110,86,0.1)}
+.btn-primary{width:100%;padding:11px;background:var(--green);color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;transition:background 0.2s}
+.btn-primary:hover{background:var(--green-dark)}
+.btn-primary:disabled{opacity:0.6;cursor:not-allowed}
+.err-msg{font-size:12px;color:#A32D2D;margin-top:8px;text-align:center;padding:8px 12px;background:#FCEBEB;border-radius:8px;display:none}
+.hint-box{background:var(--surface);border-radius:10px;padding:10px 12px;margin-top:1rem;font-size:12px;color:var(--muted)}
+.hint-box b{color:var(--text)}
+
+/* TOPBAR */
+.topbar{background:var(--green);padding:0 1.5rem;height:56px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.topbar-logo{font-size:16px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px}
+.topbar-logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round}
+.topbar-right{display:flex;align-items:center;gap:10px}
+.user-pill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px 4px 4px}
+.avatar{width:30px;height:30px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green)}
+.user-name{font-size:13px;color:#fff;font-weight:500}
+.btn-logout{background:transparent;border:1px solid rgba(255,255,255,0.35);color:#fff;padding:5px 12px;border-radius:8px;font-size:12px;cursor:pointer;font-weight:500}
+.btn-logout:hover{background:rgba(255,255,255,0.1)}
+
+/* TABS */
+.tabs{display:flex;background:#fff;border-bottom:1px solid var(--border);padding:0 1.5rem;position:sticky;top:56px;z-index:99}
+.tab{padding:0.875rem 1rem;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;display:flex;align-items:center;gap:6px;font-weight:500;transition:color 0.2s}
+.tab.active{color:var(--green);border-bottom-color:var(--green)}
+.tab:hover:not(.active){color:var(--text)}
+.tab svg{width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+
+/* CONTENT */
+.content{padding:1.5rem;max-width:900px;margin:0 auto}
+
+/* METRICS */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin-bottom:1.5rem}
+.metric{background:var(--surface);border-radius:12px;padding:1rem}
+.metric-label{font-size:11px;color:var(--muted);margin-bottom:4px;text-transform:uppercase;letter-spacing:0.05em;font-weight:500}
+.metric-val{font-size:24px;font-weight:700}
+.metric-val.green{color:var(--green)}
+.metric-val.amber{color:var(--amber-dark)}
+
+/* ALERTS */
+.alert-banner{border-radius:12px;padding:1rem 1.25rem;display:flex;align-items:flex-start;gap:10px;margin-bottom:1.25rem;border:1px solid}
+.alert-banner.amber{background:var(--amber-light);border-color:#FAC775}
+.alert-banner.green{background:var(--green-light);border-color:#5DCAA5}
+.alert-icon{font-size:20px;flex-shrink:0}
+.alert-b{font-size:13px;font-weight:600;margin-bottom:2px}
+.alert-s{font-size:12px}
+.amber .alert-b,.amber .alert-s{color:#633806}
+.green .alert-b,.green .alert-s{color:#085041}
+
+/* POLICY CARDS */
+.policy-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.policy-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:1rem}
+.p-type{display:flex;align-items:center;gap:10px}
+.p-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.p-icon.green{background:var(--green-light)}
+.p-icon.blue{background:#E6F1FB}
+.p-icon svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round}
+.p-icon.green svg{stroke:var(--green)}
+.p-icon.blue svg{stroke:#185FA5}
+.p-name{font-size:14px;font-weight:600}
+.p-no{font-size:12px;color:var(--muted);margin-top:2px}
+.badge{font-size:11px;padding:4px 10px;border-radius:6px;font-weight:600}
+.badge.active{background:var(--green-light);color:#085041}
+.badge.expiring{background:var(--amber-light);color:#633806}
+.p-meta{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+@media(max-width:520px){.p-meta{grid-template-columns:repeat(2,1fr)}}
+.meta-label{font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500}
+.meta-val{font-size:13px;font-weight:600}
+.bar-wrap{margin-bottom:1rem}
+.bar-labels{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-bottom:5px}
+.bar-track{height:6px;background:var(--surface);border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.bar-fill.green{background:var(--green)}
+.bar-fill.amber{background:var(--amber)}
+.bar-fill.red{background:var(--red)}
+.p-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-sm{padding:7px 13px;font-size:12px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:5px;font-weight:600;border:none;transition:all 0.2s}
+.btn-sm svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.btn-outline{background:transparent;border:1px solid var(--border)!important;color:var(--text)}
+.btn-outline:hover{background:var(--surface)}
+.btn-green{background:var(--green);color:#fff}
+.btn-green:hover{background:var(--green-dark)}
+.btn-amber{background:var(--amber);color:#fff}
+.btn-amber:hover{background:var(--amber-dark)}
+.btn-sm:disabled{opacity:0.5;cursor:not-allowed}
+
+/* PROFILE */
+.profile-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.profile-row{display:flex;align-items:center;gap:1rem;margin-bottom:1.25rem}
+.profile-avatar{width:56px;height:56px;border-radius:50%;background:var(--green-light);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--green);flex-shrink:0}
+.profile-name{font-size:18px;font-weight:700}
+.profile-id{font-size:12px;color:var(--muted);margin-top:3px}
+.info-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.info-label{font-size:11px;color:var(--muted);margin-bottom:3px;font-weight:500;text-transform:uppercase;letter-spacing:0.04em}
+.info-val{font-size:14px;font-weight:500}
+.divider{border:none;border-top:1px solid var(--border);margin:1.25rem 0}
+.pw-section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.pw-title{font-size:15px;font-weight:600;margin-bottom:1rem;display:flex;align-items:center;gap:8px;color:var(--text)}
+.pw-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.btn-pw{margin-top:1rem;padding:9px 18px;font-size:13px;background:var(--green);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:600}
+.btn-pw:hover{background:var(--green-dark)}
+.pw-success{font-size:13px;color:var(--green);margin-top:8px;display:none;align-items:center;gap:6px;font-weight:500}
+
+/* SUPPORT */
+.support-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1rem;display:flex;gap:14px;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.s-icon{width:40px;height:40px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.s-icon svg{width:20px;height:20px;fill:none;stroke-width:2;stroke-linecap:round}
+.s-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.s-desc{font-size:12px;color:var(--muted);line-height:1.6}
+.s-contact{font-size:13px;font-weight:600;color:var(--green);margin-top:6px}
+.section-title{font-size:16px;font-weight:600;margin-bottom:1rem;color:var(--text)}
+.loading-state{text-align:center;padding:3rem;color:var(--muted);font-size:14px}
+.office-info{background:var(--surface);border-radius:12px;padding:1rem;font-size:12px;color:var(--muted);line-height:1.7}
+.office-info b{color:var(--text);display:block;margin-bottom:4px;font-size:13px}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;color:#fff;padding:12px 18px;border-radius:12px;font-size:13px;display:flex;align-items:center;gap:10px;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none;z-index:9999;max-width:340px;font-weight:500;box-shadow:0 4px 16px rgba(0,0,0,0.15)}
+.toast.show{opacity:1;transform:translateY(0)}
+.toast.success{background:var(--green)}
+.toast.error{background:#A32D2D}
+.toast svg{width:16px;height:16px;fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;flex-shrink:0}
+
+/* LOADING SPINNER */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:#fff;border-radius:50%;animation:spin 0.7s linear infinite}
+
+/* SUB-ACCOUNT ACCESS MANAGEMENT */
+.sub-banner{background:var(--green-light);border:1px solid #5DCAA5;border-radius:12px;padding:0.9rem 1.1rem;margin-bottom:1.25rem;font-size:12px;color:#085041;display:flex;gap:10px;align-items:flex-start}
+.sub-banner b{display:block;font-size:13px;margin-bottom:2px}
+.viewonly-tag{font-size:10px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;background:rgba(255,255,255,0.25);color:#fff;padding:3px 8px;border-radius:6px;margin-left:8px}
+.add-sub-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.25rem;margin-bottom:1.25rem;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.add-sub-card .field{margin-bottom:0.9rem}
+.policy-pick-list{display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;padding:10px;margin-top:4px}
+.policy-pick-item{display:flex;align-items:center;gap:10px;font-size:13px;padding:6px 4px;border-radius:8px}
+.policy-pick-item:hover{background:var(--surface)}
+.policy-pick-item input{width:16px;height:16px;accent-color:var(--green);flex-shrink:0;cursor:pointer}
+.policy-pick-item .ppi-meta{font-size:11px;color:var(--muted)}
+.sub-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.1rem 1.25rem;margin-bottom:1rem;box-shadow:0 2px 8px rgba(0,0,0,0.04)}
+.sub-card-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:.6rem;gap:10px}
+.sub-name{font-size:14px;font-weight:600}
+.sub-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.sub-creds{background:var(--surface);border-radius:10px;padding:8px 10px;font-size:12px;margin:.6rem 0;display:flex;gap:18px;flex-wrap:wrap}
+.sub-creds b{color:var(--text)}
+.sub-policies{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.7rem}
+.sub-policy-chip{font-size:11px;background:var(--green-light);color:#085041;padding:4px 9px;border-radius:6px;font-weight:600}
+.badge.revoked{background:#FCEBEB;color:#A32D2D}
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+
+<div id="screen-login" class="screen active">
+<div class="login-wrap">
+  <div class="login-card">
+    <div class="brand">
+      <div class="brand-dot">
+        <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      </div>
+      <div><div class="brand-name">We Insure You</div><div class="brand-sub">Client Portal</div></div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Sign in to view your policies and documents</div>
+    <div class="field"><label>Client ID</label><input type="text" id="l-user" placeholder="e.g. WIY-10045" /></div>
+    <div class="field"><label>Password</label><input type="password" id="l-pass" placeholder="Enter your password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="err-msg" id="l-err"></div>
+    <button class="btn-primary" id="l-btn" onclick="doLogin()"><span id="l-btn-text">Sign in</span></button>
+    <div class="hint-box">Demo login — ID: <b>WIY-10045</b> · Password: <b>Pass@123</b></div>
+  </div>
+</div>
+</div>
+
+<div id="screen-dash" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">
+      <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+      We Insure You
+    </div>
+    <div class="topbar-right">
+      <div class="user-pill">
+        <div class="avatar" id="top-avatar">SG</div>
+        <span class="user-name" id="top-name">Loading...</span>
+      </div>
+      <button class="btn-logout" onclick="doLogout()">Sign out</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" id="tab-policies" onclick="switchTab('policies')">
+      <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+      My Policies
+    </div>
+    <div class="tab" id="tab-profile" onclick="switchTab('profile')">
+      <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      Profile
+    </div>
+    <div class="tab" id="tab-support" onclick="switchTab('support')">
+      <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      Support
+    </div>
+    <div class="tab" id="tab-access" onclick="switchTab('access')">
+      <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Manage Access
+    </div>
+  </div>
+
+  <div id="pane-policies" class="content">
+    <div id="sub-banner-area"></div>
+    <div id="metrics-row" class="metrics"></div>
+    <div id="alert-area"></div>
+    <div id="policies-list"><div class="loading-state">Loading your policies...</div></div>
+  </div>
+
+  <div id="pane-profile" class="content" style="display:none">
+    <div class="profile-card" id="profile-info"><div class="loading-state">Loading profile...</div></div>
+    <div class="pw-section">
+      <div class="pw-title">
+        <svg style="width:18px;height:18px;fill:none;stroke:var(--green);stroke-width:2;stroke-linecap:round" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Change password
+      </div>
+      <div class="pw-grid">
+        <div class="field" style="margin:0"><label>Current password</label><input type="password" id="pw-old" placeholder="Current password" /></div>
+        <div class="field" style="margin:0"><label>New password</label><input type="password" id="pw-new" placeholder="Min 6 characters" /></div>
+        <div class="field" style="margin:0"><label>Confirm new password</label><input type="password" id="pw-conf" placeholder="Confirm password" /></div>
+      </div>
+      <button class="btn-pw" onclick="changePassword()">Update password</button>
+      <div class="pw-success" id="pw-ok">✓ Password updated successfully.</div>
+    </div>
+  </div>
+
+  <div id="pane-support" class="content" style="display:none">
+    <div class="section-title">How can we help?</div>
+    <div class="support-card">
+      <div class="s-icon" style="background:var(--green-light)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--green)"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      </div>
+      <div><div class="s-title">Renewal assistance</div><div class="s-desc">We compare rates from 25+ insurers and call you back within 24 hours with the best renewal option for your policy.</div><div class="s-contact">📞 +91 98100 99014</div></div>
+    </div>
+    <div class="support-card">
+      <div class="s-icon" style="background:#E6F1FB">
+        <svg viewBox="0 0 24 24" style="stroke:#185FA5"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      </div>
+      <div><div class="s-title">Claim support</div><div class="s-desc">Raise a claim from your policy card above. Our team handles documentation and follows up until full settlement.</div><div class="s-contact">✉️ hello@weinsureyou.in</div></div>
+    </div>
+    <div class="support-card">
+      <div class="s-icon" style="background:var(--green-light)">
+        <svg viewBox="0 0 24 24" style="stroke:var(--green)"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+      </div>
+      <div><div class="s-title">WhatsApp us</div><div class="s-desc">Quick questions or document requests — message us and we respond within 2 hours on working days.</div><div class="s-contact">💬 +91 95607 76655</div></div>
+    </div>
+    <div class="office-info">
+      <b>Office hours</b>
+      Monday – Friday: 10:00 AM – 6:00 PM<br>
+      2546, First Floor, Opp. Sagar Cinema, Sector 16, Faridabad – 121002, Haryana
+    </div>
+  </div>
+
+  <div id="pane-access" class="content" style="display:none">
+    <div id="access-root"><div class="loading-state">Loading access settings...</div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast">
+  <svg id="toast-icon" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-msg"></span>
+</div>
+
+<script>
+const SB="https://ukqhjjnoskccotfrpdpb.supabase.co";
+const KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVrcWhqam5vc2tjY290ZnJwZHBiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIzODA2ODQsImV4cCI6MjA5Nzk1NjY4NH0.SJNT7PhhGumxkeNI5VZIxvSXbpQCkEXreh83K8Swx8o";
+const H=()=>({"apikey":KEY,"Authorization":"Bearer "+KEY,"Content-Type":"application/json"});
+
+let C=null,P=[];
+
+async function sbGet(t,q){
+  const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{headers:H()});
+  if(!r.ok){const e=await r.text();throw new Error(e);}
+  return r.json();
+}
+async function sbPost(t,d){
+  const r=await fetch(`${SB}/rest/v1/${t}`,{method:"POST",headers:{...H(),"Prefer":"return=minimal"},body:JSON.stringify(d)});
+  return r.ok;
+}
+async function sbPatch(t,q,d){
+  const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{method:"PATCH",headers:{...H(),"Prefer":"return=minimal"},body:JSON.stringify(d)});
+  return r.ok;
+}
+async function sbDelete(t,q){
+  const r=await fetch(`${SB}/rest/v1/${t}?${q}`,{method:"DELETE",headers:{...H(),"Prefer":"return=minimal"}});
+  return r.ok;
+}
+
+let SUBS=[]; // sub-accounts belonging to the logged-in main client
+
+async function doLogin(){
+  const uid=document.getElementById("l-user").value.trim();
+  const pw=document.getElementById("l-pass").value;
+  const btn=document.getElementById("l-btn");
+  const err=document.getElementById("l-err");
+  err.style.display="none";
+  if(!uid||!pw){err.textContent="Please enter your Client ID and password.";err.style.display="block";return;}
+  btn.disabled=true;
+  document.getElementById("l-btn-text").innerHTML='<span class="spinner"></span>';
+  try{
+    const data=await sbGet("clients",`client_id=eq.${encodeURIComponent(uid)}&select=*`);
+    if(data&&data.length){
+      if(data[0].password!==pw){err.textContent="Incorrect password. Please try again.";err.style.display="block";return;}
+      C=data[0];C.isSub=false;
+      enterDashboard();
+      return;
+    }
+    // not a main client — check sub-accounts (sub-client portal access)
+    const subData=await sbGet("sub_clients",`sub_id=eq.${encodeURIComponent(uid)}&select=*`);
+    if(!subData||!subData.length){err.textContent="Client ID not found.";err.style.display="block";return;}
+    const sub=subData[0];
+    if(sub.password!==pw){err.textContent="Incorrect password. Please try again.";err.style.display="block";return;}
+    if(sub.status==="revoked"){err.textContent="This access has been revoked. Please contact the primary client.";err.style.display="block";return;}
+    const parent=await sbGet("clients",`client_id=eq.${encodeURIComponent(sub.parent_client_id)}&select=*`);
+    C={...sub,client_id:sub.sub_id,isSub:true,parent_name:parent&&parent[0]?parent[0].name:sub.parent_client_id,parent_client_id:sub.parent_client_id};
+    enterDashboard();
+  }catch(e){
+    err.textContent="Connection error: "+e.message;err.style.display="block";
+  }finally{
+    btn.disabled=false;
+    document.getElementById("l-btn-text").textContent="Sign in";
+  }
+}
+
+function enterDashboard(){
+  document.getElementById("screen-login").classList.remove("active");
+  document.getElementById("screen-dash").classList.add("active");
+  const ini=C.name.split(" ").map(x=>x[0]).join("").substring(0,2).toUpperCase();
+  document.getElementById("top-avatar").textContent=ini;
+  document.getElementById("top-name").innerHTML=C.name+(C.isSub?'<span class="viewonly-tag">View only</span>':"");
+  document.getElementById("tab-access").style.display=C.isSub?"none":"flex";
+  loadPolicies();loadProfile();
+}
+
+function doLogout(){
+  C=null;P=[];SUBS=[];
+  document.getElementById("screen-dash").classList.remove("active");
+  document.getElementById("screen-login").classList.add("active");
+  document.getElementById("l-user").value="";
+  document.getElementById("l-pass").value="";
+  switchTab("policies");
+}
+
+const dl=d=>Math.ceil((new Date(d)-new Date())/864e5);
+const fd=d=>d?new Date(d).toLocaleDateString("en-IN",{day:"2-digit",month:"short",year:"numeric"}):"—";
+const pct=(s,e)=>Math.min(100,Math.max(0,Math.round((new Date()-new Date(s))/(new Date(e)-new Date(s))*100)));
+
+async function loadPolicies(){
+  document.getElementById("policies-list").innerHTML='<div class="loading-state">Loading your policies...</div>';
+  try{
+    if(C.isSub){
+      const ids=(C.policy_ids||[]);
+      if(!ids.length){P=[];}
+      else P=await sbGet("policies",`id=in.(${ids.join(",")})&select=*&order=end_date.asc`)||[];
+    }else{
+      P=await sbGet("policies",`client_id=eq.${encodeURIComponent(C.client_id)}&select=*&order=end_date.asc`)||[];
+    }
+    renderMetrics();renderAlerts();renderPolicies();
+  }catch(e){
+    document.getElementById("policies-list").innerHTML=`<div class="loading-state" style="color:#A32D2D">Error: ${e.message}</div>`;
+  }
+}
+
+function renderMetrics(){
+  document.getElementById("sub-banner-area").innerHTML=C.isSub?`
+    <div class="sub-banner">
+      <div style="font-size:18px">🔒</div>
+      <div><b>View-only access</b>You're viewing ${P.length} polic${P.length===1?'y':'ies'} shared with you by ${C.parent_name}. Renewals and claims must be requested by the primary account holder.</div>
+    </div>`:"";
+  const active=P.filter(p=>p.status==="active").length;
+  const exp=P.filter(p=>dl(p.end_date)<=30&&dl(p.end_date)>0);
+  const nxt=P.length?Math.min(...P.map(p=>dl(p.end_date))):0;
+  const ncb=P.find(p=>p.ncb_percent>0);
+  document.getElementById("metrics-row").innerHTML=`
+    <div class="metric"><div class="metric-label">Active policies</div><div class="metric-val green">${active}</div></div>
+    <div class="metric"><div class="metric-label">Next renewal</div><div class="metric-val ${nxt<=30?'amber':''}">${nxt>0?nxt+' days':'—'}</div></div>
+    <div class="metric"><div class="metric-label">Expiring soon</div><div class="metric-val ${exp.length?'amber':''}">${exp.length}</div></div>
+    <div class="metric"><div class="metric-label">Best NCB</div><div class="metric-val green">${ncb?ncb.ncb_percent+'%':'—'}</div></div>`;
+}
+
+function renderAlerts(){
+  document.getElementById("alert-area").innerHTML=P.filter(p=>dl(p.end_date)<=30&&dl(p.end_date)>0).map(p=>`
+    <div class="alert-banner amber" id="al-${p.id}">
+      <div class="alert-icon">⏰</div>
+      <div><div class="alert-b">${p.vehicle_name||p.policy_type} renews in ${dl(p.end_date)} days</div>
+      <div class="alert-s">Policy ${p.policy_no} expires ${fd(p.end_date)}. Renew early to protect your NCB.</div></div>
+    </div>`).join("");
+}
+
+function renderPolicies(){
+  if(!P.length){document.getElementById("policies-list").innerHTML='<div class="loading-state">No policies found.</div>';return;}
+  document.getElementById("policies-list").innerHTML=P.map(p=>{
+    const days=dl(p.end_date),bc=days<=30?"amber":"green";
+    const isM=p.policy_type==="Two-Wheeler"||p.policy_type==="Car";
+    const idv=p.idv?`₹${Number(p.idv).toLocaleString("en-IN")}`:p.sum_insured?`₹${Number(p.sum_insured).toLocaleString("en-IN")}`:"—";
+    const mIcon=isM?`<svg viewBox="0 0 24 24"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6h-5l-3 6 2 5.5M8 6L5.5 14M19 10l-4-4-3 4 4 4"/></svg>`:`<svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>`;
+    return`<div class="policy-card">
+      <div class="policy-header">
+        <div class="p-type">
+          <div class="p-icon ${isM?'green':'blue'}">${mIcon}</div>
+          <div><div class="p-name">${p.vehicle_name||p.policy_type}</div><div class="p-no">${p.policy_no} · ${p.insurer}</div></div>
+        </div>
+        <span class="badge ${days<=30?'expiring':'active'}">${days<=30?'Expiring soon':'Active'}</span>
+      </div>
+      <div class="p-meta">
+        <div><div class="meta-label">Cover period</div><div class="meta-val">${fd(p.start_date)} – ${fd(p.end_date)}</div></div>
+        <div><div class="meta-label">${p.idv?'IDV':'Sum insured'}</div><div class="meta-val">${idv}</div></div>
+        <div><div class="meta-label">Premium / NCB</div><div class="meta-val">₹${Number(p.premium).toLocaleString("en-IN")} / ${p.ncb_percent||0}%</div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-labels"><span>Start: ${fd(p.start_date)}</span><span style="${days<=30?'color:var(--amber-dark);font-weight:600':''}">${days>0?days+' days left':'Expired'}</span></div>
+        <div class="bar-track"><div class="bar-fill ${bc}" style="width:${pct(p.start_date,p.end_date)}%"></div></div>
+      </div>
+      <div class="p-actions">
+        <button class="btn-sm btn-outline" onclick="downloadPolicy('${p.policy_no}')">
+          <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download policy
+        </button>
+        ${C.isSub?"":`<button class="btn-sm btn-amber" id="rb-${p.id}" onclick="requestRenewal('${p.id}','${p.policy_no}','${(p.vehicle_name||p.policy_type).replace(/'/g,"")}')">
+          <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>Request renewal
+        </button>
+        <button class="btn-sm btn-outline" onclick="raiseClaim('${p.policy_no}','${(p.vehicle_name||p.policy_type).replace(/'/g,"")}')">
+          <svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>Raise a claim
+        </button>`}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+async function requestRenewal(pid,pno,pname){
+  const btn=document.getElementById("rb-"+pid);
+  if(!btn)return;
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending...';
+  const ok=await sbPost("renewal_requests",{client_id:C.client_id,policy_no:pno,client_name:C.name,mobile:C.mobile,status:"pending"});
+  if(ok){
+    btn.innerHTML='✓ Requested';btn.classList.replace("btn-amber","btn-green");
+    const al=document.getElementById("al-"+pid);
+    if(al){al.className="alert-banner green";al.querySelector(".alert-b").textContent="Renewal requested — we'll call you within 24 hours";al.querySelector(".alert-icon").textContent="✓";}
+    showToast("Renewal request sent! Our team will reach you within 24 hrs.","success");
+  }else{
+    btn.disabled=false;btn.innerHTML='↺ Request renewal';
+    showToast("Could not send request. Please try again.","error");
+  }
+}
+
+async function raiseClaim(pno,pname){
+  const ok=await sbPost("claims",{client_id:C.client_id,policy_no:pno,client_name:C.name,claim_type:pname,status:"intimated"});
+  showToast(ok?"Claim intimated! Our team will call you within 2 hours.":"Error. Please call us directly.","success");
+}
+
+function downloadPolicy(pno){showToast(`Policy ${pno} — downloading PDF...`,"success");}
+
+function loadProfile(){
+  if(!C)return;
+  const ini=C.name.split(" ").map(x=>x[0]).join("").substring(0,2).toUpperCase();
+  document.getElementById("profile-info").innerHTML=`
+    <div class="profile-row">
+      <div class="profile-avatar">${ini}</div>
+      <div><div class="profile-name">${C.name}</div><div class="profile-id">${C.isSub?'Shared access ID':'Client ID'}: ${C.client_id}${C.isSub?'':' · Member since '+new Date(C.created_at).getFullYear()}</div></div>
+    </div>
+    <hr class="divider">
+    <div class="info-grid">
+      <div><div class="info-label">Mobile</div><div class="info-val">${C.mobile||'—'}</div></div>
+      <div><div class="info-label">Email</div><div class="info-val">${C.email||'—'}</div></div>
+      ${C.isSub?
+        `<div><div class="info-label">Access granted by</div><div class="info-val">${C.parent_name} (${C.parent_client_id})</div></div>
+         <div><div class="info-label">Status</div><div class="info-val">${C.status==='revoked'?'Revoked':'Active'}</div></div>`:
+        `<div><div class="info-label">Address</div><div class="info-val">${C.address||'—'}</div></div>
+         <div><div class="info-label">Relationship manager</div><div class="info-val">${C.relationship_manager||'—'}</div></div>`}
+    </div>`;
+}
+
+async function changePassword(){
+  const o=document.getElementById("pw-old").value;
+  const n=document.getElementById("pw-new").value;
+  const cf=document.getElementById("pw-conf").value;
+  if(!o||!n||!cf){showToast("Please fill all password fields.","error");return;}
+  if(o!==C.password){showToast("Current password is incorrect.","error");return;}
+  if(n!==cf){showToast("New passwords don't match.","error");return;}
+  if(n.length<6){showToast("Password must be at least 6 characters.","error");return;}
+  const table=C.isSub?"sub_clients":"clients";
+  const idField=C.isSub?"sub_id":"client_id";
+  const ok=await sbPatch(table,`${idField}=eq.${encodeURIComponent(C.client_id)}`,{password:n});
+  if(ok){
+    C.password=n;
+    const s=document.getElementById("pw-ok");s.style.display="flex";
+    document.getElementById("pw-old").value="";document.getElementById("pw-new").value="";document.getElementById("pw-conf").value="";
+    setTimeout(()=>s.style.display="none",3000);
+  }else showToast("Could not update password. Please try again.","error");
+}
+
+function switchTab(t){
+  ["policies","profile","support","access"].forEach(x=>{
+    document.getElementById("tab-"+x).classList.toggle("active",x===t);
+    document.getElementById("pane-"+x).style.display=x===t?"block":"none";
+  });
+  if(t==="access")loadAccessPane();
+}
+
+let tt;
+function showToast(msg,type="success"){
+  const t=document.getElementById("toast");
+  const icon=document.getElementById("toast-icon");
+  document.getElementById("toast-msg").textContent=msg;
+  icon.innerHTML=type==="error"?'<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>':"<polyline points='20 6 9 17 4 12'/>";
+  t.className="toast show "+type;
+  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove("show"),3500);
+}
+
+/* ===== SUB-ACCOUNT ACCESS MANAGEMENT (sub-client portals) ===== */
+async function loadAccessPane(){
+  if(C.isSub){
+    document.getElementById("access-root").innerHTML='<div class="empty-state">Access management is only available to the primary account holder.</div>';
+    return;
+  }
+  document.getElementById("access-root").innerHTML='<div class="loading-state">Loading access settings...</div>';
+  try{
+    SUBS=await sbGet("sub_clients",`parent_client_id=eq.${encodeURIComponent(C.client_id)}&select=*&order=created_at.desc`)||[];
+    renderAccessRoot();
+  }catch(e){
+    document.getElementById("access-root").innerHTML=`<div class="loading-state" style="color:#A32D2D">Error: ${e.message}</div>`;
+  }
+}
+
+function renderAccessRoot(){
+  if(!P.length){
+    document.getElementById("access-root").innerHTML='<div class="empty-state">You need at least one policy before you can share access with someone else.</div>';
+    return;
+  }
+  const policyChecks=P.map(p=>`
+    <label class="policy-pick-item">
+      <input type="checkbox" class="np-policy" value="${p.id}">
+      <div><div>${p.vehicle_name||p.policy_type}</div><div class="ppi-meta">${p.policy_no} · ${p.insurer}</div></div>
+    </label>`).join("");
+
+  const subCards=SUBS.length?SUBS.map(s=>{
+    const ids=s.policy_ids||[];
+    const chips=P.filter(p=>ids.includes(p.id)).map(p=>`<span class="sub-policy-chip">${p.vehicle_name||p.policy_type} · ${p.policy_no}</span>`).join("")||'<span class="sub-policy-chip" style="background:var(--surface);color:var(--muted)">No policies assigned</span>';
+    return `<div class="sub-card">
+      <div class="sub-card-head">
+        <div><div class="sub-name">${s.name}</div><div class="sub-meta">${s.mobile||'—'} · Added ${fd(s.created_at)}</div></div>
+        <span class="badge ${s.status==='revoked'?'revoked':'active'}">${s.status==='revoked'?'Revoked':'Active'}</span>
+      </div>
+      <div class="sub-creds"><span>Login ID: <b>${s.sub_id}</b></span><span>Password: <b>${s.password}</b></span></div>
+      <div class="sub-policies">${chips}</div>
+      <div class="p-actions">
+        <button class="btn-sm btn-outline" onclick="manageSubPolicies('${s.id}')">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Edit policy access
+        </button>
+        ${s.status==='revoked'?
+          `<button class="btn-sm btn-green" onclick="setSubStatus('${s.id}','active')">Reactivate</button>`:
+          `<button class="btn-sm btn-amber" onclick="setSubStatus('${s.id}','revoked')">Revoke access</button>`}
+        <button class="btn-sm btn-outline" style="color:#A32D2D" onclick="deleteSubClient('${s.id}','${s.name.replace(/'/g,"")}')">Remove</button>
+      </div>
+    </div>`;
+  }).join(""):'<div class="empty-state">No sub-accounts yet. Add one below to let a family member or colleague view selected policies.</div>';
+
+  document.getElementById("access-root").innerHTML=`
+    <div class="section-title">Give someone view-only access</div>
+    <div class="add-sub-card">
+      <div class="field"><label>Their name</label><input type="text" id="np-name" placeholder="e.g. Rohit Sharma"></div>
+      <div class="field"><label>Mobile number (optional)</label><input type="text" id="np-mobile" placeholder="10-digit mobile number"></div>
+      <div class="field">
+        <label>Policies they can view</label>
+        <div class="policy-pick-list">${policyChecks}</div>
+      </div>
+      <button class="btn-pw" onclick="createSubClient()" id="np-btn">+ Create access</button>
+    </div>
+    <div class="section-title">Existing access</div>
+    ${subCards}`;
+}
+
+function genSubId(){
+  const n=(SUBS.length+1+Math.floor(Math.random()*90)).toString().padStart(2,"0");
+  return `${C.client_id}-S${n}`;
+}
+function genSubPassword(){
+  return "Sub@"+Math.floor(1000+Math.random()*9000);
+}
+
+async function createSubClient(){
+  const name=document.getElementById("np-name").value.trim();
+  const mobile=document.getElementById("np-mobile").value.trim();
+  const ids=[...document.querySelectorAll(".np-policy:checked")].map(c=>Number(c.value));
+  if(!name){showToast("Please enter a name.","error");return;}
+  if(!ids.length){showToast("Select at least one policy to share.","error");return;}
+  const btn=document.getElementById("np-btn");
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Creating...';
+  const payload={
+    parent_client_id:C.client_id,
+    sub_id:genSubId(),
+    name,mobile,
+    password:genSubPassword(),
+    policy_ids:ids,
+    status:"active",
+    created_at:new Date().toISOString()
+  };
+  const ok=await sbPost("sub_clients",payload);
+  if(ok){
+    showToast(`Access created for ${name}. Share Login ID ${payload.sub_id} with them.`,"success");
+    loadAccessPane();
+  }else{
+    btn.disabled=false;btn.innerHTML="+ Create access";
+    showToast("Could not create access. Please try again.","error");
+  }
+}
+
+async function setSubStatus(id,status){
+  const ok=await sbPatch("sub_clients",`id=eq.${id}`,{status});
+  showToast(ok?(status==="revoked"?"Access revoked.":"Access reactivated."):"Could not update. Try again.",ok?"success":"error");
+  if(ok)loadAccessPane();
+}
+
+async function deleteSubClient(id,name){
+  if(!confirm(`Remove access for ${name}? This cannot be undone.`))return;
+  const ok=await sbDelete("sub_clients",`id=eq.${id}`);
+  showToast(ok?"Access removed.":"Could not remove. Try again.",ok?"success":"error");
+  if(ok)loadAccessPane();
+}
+
+async function manageSubPolicies(id){
+  const sub=SUBS.find(s=>String(s.id)===String(id));
+  if(!sub)return;
+  const current=new Set(sub.policy_ids||[]);
+  const list=P.map(p=>`${current.has(p.id)?"[x]":"[ ]"} ${p.id}: ${p.vehicle_name||p.policy_type} (${p.policy_no})`).join("\n");
+  const input=prompt(`Edit policy IDs visible to ${sub.name}, comma-separated.\n\nAvailable:\n${list}\n\nCurrent: ${[...current].join(",")}`, [...current].join(","));
+  if(input===null)return;
+  const ids=input.split(",").map(x=>Number(x.trim())).filter(x=>!isNaN(x)&&P.some(p=>p.id===x));
+  const ok=await sbPatch("sub_clients",`id=eq.${id}`,{policy_ids:ids});
+  showToast(ok?"Policy access updated.":"Could not update. Try again.",ok?"success":"error");
+  if(ok)loadAccessPane();
+}
+</script>
+</body>
+</html>
